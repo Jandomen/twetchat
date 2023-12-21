@@ -1,4 +1,4 @@
-// api/posts/[postId].ts
+
 
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/libs/prismadb";
@@ -15,7 +15,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       throw new Error('Invalid ID');
     }
 
-    // Puedes ajustar estos valores según tus necesidades
     const pageSize = 10;
     const page = 1;
 

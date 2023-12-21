@@ -122,9 +122,10 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
                 hover:text-red-500
             ">
               <LikeIcon color={hasLiked ? 'red' : ''} size={20} />
-              <p>
-                {data.likedIds.length}
-              </p>
+               <p>
+                  {data?.likedIds?.length}
+               </p>
+
             </div>
           </div>
         </div>
