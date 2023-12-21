@@ -1,5 +1,6 @@
-import { NextApiRequest, NextApiResponse } from "next";
+// api/posts/[postId].ts
 
+import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/libs/prismadb";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -14,6 +15,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       throw new Error('Invalid ID');
     }
 
+    // Puedes ajustar estos valores según tus necesidades
+    const pageSize = 10;
+    const page = 1;
+
     const post = await prisma.post.findUnique({
       where: {
         id: postId,
@@ -26,7 +31,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           },
           orderBy: {
             createdAt: 'desc'
-          }
+          },
+          skip: (page - 1) * pageSize, // Calcula la cantidad de comentarios para omitir
+          take: pageSize, // Toma solo la cantidad específica de comentarios
         },
       },
     });

@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-
 import serverAuth from "@/libs/serverAuth";
 import prisma from "@/libs/prismadb";
 
@@ -25,9 +24,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     if (req.method === 'GET') {
-      const { userId } = req.query;
-
-      console.log({ userId })
+      const { userId, page, pageSize } = req.query;
+      const currentPage = page ? Number(page) : 1;
+      const itemsPerPage = pageSize ? Number(pageSize) : 10;
 
       let posts;
 
@@ -43,6 +42,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           orderBy: {
             createdAt: 'desc'
           },
+          skip: (currentPage - 1) * itemsPerPage,
+          take: itemsPerPage,
         });
       } else {
         posts = await prisma.post.findMany({
@@ -52,14 +53,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           },
           orderBy: {
             createdAt: 'desc'
-          }
+          },
+          skip: (currentPage - 1) * itemsPerPage,
+          take: itemsPerPage,
         });
       }
 
       return res.status(200).json(posts);
     }
   } catch (error) {
-    console.log(error);
-    return res.status(400).end();
+    console.error(error);
+    return res.status(500).end();
   }
 }
